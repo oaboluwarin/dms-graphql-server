@@ -1,5 +1,5 @@
 {
-  "name": "scale",
+  "name": "dms-graphql-server",
   "version": "1.0.0",
   "description": "graphql and node",
   "main": "index.js",
@@ -20,9 +20,9 @@
   "author": "oaboluwarin",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/oaboluwarin/scale/issues"
+    "url": "https://github.com/oaboluwarin/dms-graphql-server/issues"
   },
-  "homepage": "https://github.com/oaboluwarin/scale#readme",
+  "homepage": "https://github.com/oaboluwarin/dms-graphql-server#readme",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
