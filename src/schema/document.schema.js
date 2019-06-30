@@ -1,14 +1,25 @@
 import mongoose, { Schema } from 'mongoose';
 
 const documentSchema = new Schema({
-  title: String,
-  content: String,
-  access: String,
+  title: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  access: {
+    type: String,
+    required: true,
+    enum: ['PUBLIC', 'PRIVATE', 'ROLE'],
+    default: 'PUBLIC'
+  },
   owner: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'user',
-      default: null
+      required: true,
+      ref: 'user'
     }
   ]
 });
