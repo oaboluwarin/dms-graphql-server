@@ -1,5 +1,7 @@
+import { UserInputError, AuthenticationError } from 'apollo-server-core';
 import Users from './user.schema';
 import Documents from './document.schema';
+import { createToken } from '../util';
 
 const resolvers = {
   Query: {
@@ -19,7 +21,12 @@ const resolvers = {
         return new Error(error.message);
       }
     },
-    getUsers: async () => {
+    getUsers: async (_, args, context) => {
+      if (context.user.role !== 'ADMIN') {
+        throw new Error(
+          'Permission denied. Only Admins can query for all users'
+        );
+      }
       return await Users.find({}).exec();
     },
     getDocuments: async () => {
@@ -30,9 +37,41 @@ const resolvers = {
     registerUser: async (_, args) => {
       try {
         let response = await Users.create(args);
-        return response;
+
+        const token = await createToken(response);
+        return { token };
       } catch (error) {
-        return error.message;
+        throw new Error(error.message);
+      }
+    },
+    login: async (_, args) => {
+      try {
+        let { identifier } = args;
+        identifier = identifier && identifier.trim();
+
+        const identifierRegex = `^${identifier}$`;
+
+        const user = await Users.findOne({
+          $or: [
+            { email: new RegExp(identifierRegex, 'i') },
+            { username: new RegExp(identifierRegex, 'i') }
+          ]
+        }).exec();
+
+        if (!user) {
+          throw new UserInputError(`User ${identifier} does not exist`);
+        }
+
+        const passwordIsValid = user.validPassword(args.password);
+
+        if (!passwordIsValid) {
+          throw new AuthenticationError('Incorrect password');
+        }
+
+        const token = await createToken(user);
+        return { token };
+      } catch (error) {
+        throw new Error(error.message);
       }
     }
   }
