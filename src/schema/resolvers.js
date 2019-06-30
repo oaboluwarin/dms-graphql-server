@@ -32,7 +32,7 @@ const resolvers = {
         let response = await Users.create(args);
         return response;
       } catch (error) {
-        return error.message;
+        return new Error(error.message);
       }
     }
   }
