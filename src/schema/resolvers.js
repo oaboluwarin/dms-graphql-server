@@ -1,77 +1,39 @@
-const { find, filter } = require('lodash');
-
-const users = [
-  {
-    id: 'uiaswuiuiwqiu',
-    username: 'oreoluwade',
-    email: 'oreoluwade@gmail.com',
-    password: 'oreoluwade',
-    role: 'admin',
-    documents: []
-  },
-  {
-    id: 'yuewuywpopqpre',
-    username: 'glassboom',
-    email: 'glassboomy@gmail.com',
-    password: 'glassboom',
-    role: 'user',
-    documents: []
-  },
-  {
-    id: 'woqpiurtwsre',
-    username: 'knite',
-    email: 'knite_dev@gmail.com',
-    password: 'knite',
-    role: 'user',
-    documents: []
-  }
-];
-
-const allDocuments = [
-  {
-    id: '123456',
-    title: 'First Document',
-    content: 'This is a sample for the first document',
-    access: 'private'
-  },
-  {
-    id: '234567',
-    title: 'Second Document',
-    content: 'Secodn document shennaningans',
-    access: 'public'
-  },
-  {
-    id: '345678',
-    title: 'Third Document',
-    content: 'Show the results of the doc query when made',
-    access: 'role'
-  },
-  {
-    id: '987654',
-    title: 'Fourth public Document',
-    content: 'Document details',
-    access: 'public'
-  }
-];
+import Users from './user.schema';
+import Documents from './document.schema';
 
 const resolvers = {
   Query: {
-    getUser(parent, args, context, info) {
-      return find(users, { id: args.id });
+    getUser: async (_, args) => {
+      try {
+        const response = await Users.findById(args.id);
+        return response;
+      } catch (error) {
+        return new Error(error.message);
+      }
     },
-    getDocument(parent, args, context, info) {
-      return find(allDocuments, { id: args.id });
+    getDocument: async (_, args) => {
+      try {
+        const response = await Documents.findById(args.id);
+        return response;
+      } catch (error) {
+        return new Error(error.message);
+      }
     },
-    getUsers(parent, args, context, info) {
-      return users;
+    getUsers: async () => {
+      return await Users.find({}).exec();
     },
-    getDocuments(parent, args, context, info) {
-      return allDocuments;
+    getDocuments: async () => {
+      return await Documents.find({}).exec();
     }
   },
-  User: {
-    documents(owner) {
-      return filter(allDocuments, { owner: owner.id });
+  Mutation: {
+    registerUser: async (_, args) => {
+      try {
+        let response = await Users.create(args);
+        return response;
+      } catch (error) {
+        return error.message;
+      }
     }
   }
 };
