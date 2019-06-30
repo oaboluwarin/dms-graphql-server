@@ -1,5 +1,5 @@
 import express from 'express';
-import { ApolloServer, AuthenticationError } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { typeDefs, resolvers } from './src/schema';

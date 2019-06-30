@@ -15,13 +15,11 @@ const documentSchema = new Schema({
     enum: ['PUBLIC', 'PRIVATE', 'ROLE'],
     default: 'PUBLIC'
   },
-  owner: [
-    {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'user'
-    }
-  ]
+  owner: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'user'
+  }
 });
 
 const Documents = mongoose.model('document', documentSchema);
