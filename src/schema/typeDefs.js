@@ -18,6 +18,10 @@ const typeDefs = gql`
     owner: User
   }
 
+  type Token {
+    token: String
+  }
+
   type Query {
     getUser(id: ID!): User
     getDocument(id: ID!): Document
@@ -31,7 +35,8 @@ const typeDefs = gql`
       email: String!
       password: String!
       role: String!
-    ): User
+    ): Token
+    login(identifier: String!, password: String!): Token
   }
 `;
 
