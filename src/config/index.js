@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 
 const url = 'mongodb://localhost:27017/dmsgraphqldb';
 
-mongoose.connect(url, { useNewUrlParser: true });
+mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
 mongoose.connection.once('open', () => {
   console.log(`Connected to mongo at ${url}`);
 });
