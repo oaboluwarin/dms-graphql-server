@@ -28,6 +28,6 @@ app.use(cors());
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-app.listen({ port: 4000 }, () => {
+app.listen({ port: process.env.PORT || 4000 }, () => {
   console.log(`🚀  Server ready at ${server.graphqlPath}`);
 });

@@ -9,10 +9,7 @@
   "scripts": {
     "dev": "babel-watch app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rm -rf build && mkdir build",
-    "build-babel": "babel -d ./build ./ -s --ignore 'node_modules,build,coverage,.github'",
-    "build": "npm run clean && npm run build-babel",
-    "start": "npm run build && node ./build/app.js"
+    "start": "babel-node app.js"
   },
   "repository": {
     "type": "git",
