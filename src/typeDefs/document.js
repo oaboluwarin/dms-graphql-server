@@ -2,10 +2,12 @@ const { gql } = require('apollo-server-express');
 
 const documentDefs = gql`
   type Document {
-    id: ID
-    title: String
-    content: String
-    access: String
+    id: ID!
+    title: String!
+    content: String!
+    access: String!
+    createdAt: Date!
+    updatedAt: Date!
     owner: User
   }
 
