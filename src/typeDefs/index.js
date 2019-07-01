@@ -16,7 +16,7 @@ const linkSchema = gql`
   }
 
   type Message {
-    _: Boolean
+    message: String
   }
 `;
 

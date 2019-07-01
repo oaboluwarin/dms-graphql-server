@@ -1,5 +1,5 @@
 import { combineResolvers } from 'graphql-resolvers';
-import { isAuthenticated, isAdmin, isOwner } from './authorization';
+import { isAuthenticated, isAdmin, isDocumentOwner } from './authorization';
 
 export default {
   Query: {
@@ -61,7 +61,7 @@ export default {
 
     updateDocument: combineResolvers(
       isAuthenticated,
-      isOwner,
+      isDocumentOwner,
       async (_, args, { models }) => {
         try {
           const updatedDocument = await models.Documents.findByIdAndUpdate(
@@ -81,7 +81,7 @@ export default {
 
     deleteDocument: combineResolvers(
       isAuthenticated,
-      isOwner,
+      isDocumentOwner,
       async (_, args, { models }) => {
         try {
           const documentFound = await models.Documents.findByIdAndDelete(
