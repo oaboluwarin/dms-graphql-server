@@ -2,7 +2,9 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { typeDefs, resolvers } from './src/schema';
+import typeDefs from './src/typeDefs';
+import resolvers from './src/resolvers';
+import models from './src/models';
 import { getUserWithToken } from './src/util';
 import './src/config';
 
@@ -14,7 +16,10 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const token = req.headers.authorization || '';
     const user = await getUserWithToken(token);
-    return { user };
+    return {
+      user,
+      models
+    };
   }
 });
 
