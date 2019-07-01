@@ -1,33 +1,44 @@
-import { UserInputError, AuthenticationError } from 'apollo-server-core';
-import Users from '../models/user';
+import { UserInputError, AuthenticationError } from 'apollo-server-express';
+import { combineResolvers } from 'graphql-resolvers';
 import { createToken } from '../util';
+import { isAuthenticated, isAdmin, isOwner } from './authorization';
 
 export default {
   Query: {
-    getUser: async (_, args) => {
+    getUser: combineResolvers(isAuthenticated, async (_, args, { models }) => {
       try {
-        const response = await Users.findById(args.id);
+        const response = await models.Users.findById(args.id);
         return response;
       } catch (error) {
         return new Error(error.message);
       }
-    },
-    getUsers: async (_, args, context) => {
-      // if (context.user.role !== 'ADMIN') {
-      //   throw new Error(
-      //     'Permission denied. Only Admins can query for all users'
-      //   );
-      // }
-      return await Users.find({})
-        .populate('documents')
-        .exec();
-    }
+    }),
+
+    getAllUsers: combineResolvers(
+      isAuthenticated,
+      isAdmin,
+      async (_, args, { models }) => await models.Users.find({}).exec()
+    ),
+
+    getAdminUsers: combineResolvers(
+      isAuthenticated,
+      isAdmin,
+      async (_, args, { models }) =>
+        await models.Users.find({ role: 'ADMIN' }).exec()
+    ),
+
+    getRegularUsers: combineResolvers(
+      isAuthenticated,
+      isAdmin,
+      async (_, args, { models }) =>
+        await models.Users.find({ role: 'USER' }).exec()
+    )
   },
 
   Mutation: {
-    registerUser: async (_, args) => {
+    registerUser: async (_, args, { models }) => {
       try {
-        let response = await Users.create(args);
+        let response = await models.Users.create(args);
 
         const token = await createToken(response);
         return { token };
@@ -35,14 +46,15 @@ export default {
         throw new Error(error.message);
       }
     },
-    login: async (_, args) => {
+
+    login: async (_, args, { models }) => {
       try {
         let { identifier } = args;
         identifier = identifier && identifier.trim();
 
         const identifierRegex = `^${identifier}$`;
 
-        const user = await Users.findOne({
+        const user = await models.Users.findOne({
           $or: [
             { email: new RegExp(identifierRegex, 'i') },
             { username: new RegExp(identifierRegex, 'i') }
@@ -65,33 +77,49 @@ export default {
         throw new Error(error.message);
       }
     },
-    updateUser: async (_, args) => {
-      try {
-        const updatedUser = await Users.findByIdAndUpdate(args.id, args, {
-          new: true
-        });
-        if (!updatedUser) {
-          throw new Error('User could not be updated');
+
+    updateUser: combineResolvers(
+      isAuthenticated,
+      isOwner,
+      async (_, args, { models }) => {
+        try {
+          const updatedUser = await models.Users.findByIdAndUpdate(
+            args.id,
+            args,
+            {
+              new: true
+            }
+          );
+          if (!updatedUser) {
+            throw new Error('User could not be updated');
+          }
+          return updatedUser;
+        } catch (error) {
+          throw new Error(error.message);
         }
-        return updatedUser;
-      } catch (error) {
-        throw new Error(error.message);
       }
-    },
-    deleteUser: async (_, args) => {
-      try {
-        const userFound = await Users.findByIdAndDelete(args.id);
-        if (userFound) {
-          return { message: 'User deleted' };
+    ),
+
+    deleteUser: combineResolvers(
+      isAuthenticated,
+      isOwner,
+      async (_, args, { models }) => {
+        try {
+          const userFound = await models.Users.findByIdAndDelete(args.id);
+          if (userFound) {
+            return { message: 'User deleted' };
+          }
+          throw new Error('User does not exist');
+        } catch (error) {
+          throw new Error(error.message);
         }
-        throw new Error('User does not exist');
-      } catch (error) {
-        throw new Error(error.message);
       }
-    }
+    )
   },
 
   User: {
-    documents: async (user, args, context) => {}
+    documents: async (user, args, { models }) => {
+      return await models.Documents.find({ owner: user.id }).exec();
+    }
   }
 };
