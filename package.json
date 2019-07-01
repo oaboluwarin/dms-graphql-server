@@ -4,8 +4,12 @@
   "description": "graphql and node",
   "main": "index.js",
   "scripts": {
-    "start": "babel-watch app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "babel-watch app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf build && mkdir build",
+    "build-babel": "babel -d ./build ./ -s --ignore 'node_modules,build,coverage,.github'",
+    "build": "npm run clean && npm run build-babel",
+    "start": "npm run build && node ./build/app.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +38,7 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
+    "@babel/cli": "^7.4.4",
     "apollo-server-express": "^2.6.7",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
