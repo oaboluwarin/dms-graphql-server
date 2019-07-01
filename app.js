@@ -21,7 +21,8 @@ const server = new ApolloServer({
       models
     };
   },
-  introspection: process.env.NODE_ENV === 'production' ? true : false
+  introspection: true,
+  playground: true
 });
 
 const app = express();
