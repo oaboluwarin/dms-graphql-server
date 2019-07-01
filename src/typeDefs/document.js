@@ -11,7 +11,10 @@ const documentDefs = gql`
 
   extend type Query {
     getDocument(id: ID!): Document
-    getDocuments: [Document!]
+    getAllDocuments: [Document!]
+    getPublicDocuments: [Document!]
+    getPrivateDocuments: [Document!]
+    getRoleDocuments: [Document!]
   }
 
   extend type Mutation {

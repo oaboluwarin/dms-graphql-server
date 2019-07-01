@@ -14,13 +14,11 @@ const userDefs = gql`
     token: String
   }
 
-  type Message {
-    message: String
-  }
-
   extend type Query {
     getUser(id: ID!): User
-    getUsers: [User!]
+    getAllUsers: [User!]
+    getAdminUsers: [User!]
+    getRegularUsers: [User!]
   }
 
   extend type Mutation {

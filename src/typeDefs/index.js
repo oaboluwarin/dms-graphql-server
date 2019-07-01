@@ -14,6 +14,10 @@ const linkSchema = gql`
   type Subscription {
     _: Boolean
   }
+
+  type Message {
+    _: Boolean
+  }
 `;
 
 export default [linkSchema, userDefs, documentDefs];
