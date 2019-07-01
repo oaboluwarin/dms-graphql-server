@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import typeDefs from './src/typeDefs';
 import resolvers from './src/resolvers';
 import models from './src/models';
-// import { getUserWithToken } from './src/util';
+import { getUserWithToken } from './src/util';
 import './src/config';
 
 dotenv.config();
@@ -13,14 +13,14 @@ dotenv.config();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: {
-    models
+  context: async ({ req }) => {
+    const token = req.headers.authorization || '';
+    const user = await getUserWithToken(token);
+    return {
+      user,
+      models
+    };
   }
-  // context: async ({ req }) => {
-  //   const token = req.headers.authorization || '';
-  //   const user = await getUserWithToken(token);
-  //   return { user };
-  // }
 });
 
 const app = express();
