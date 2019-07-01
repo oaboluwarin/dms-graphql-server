@@ -2,11 +2,15 @@ const { gql } = require('apollo-server-express');
 
 const userDefs = gql`
   type User {
-    id: ID
-    username: String
-    email: String
-    password: String
-    role: String
+    id: ID!
+    username: String!
+    firstname: String
+    lastname: String
+    email: String!
+    password: String!
+    role: String!
+    createdAt: Date!
+    updatedAt: Date!
     documents: [Document]
   }
 
@@ -27,6 +31,8 @@ const userDefs = gql`
       email: String!
       password: String!
       role: String!
+      firstname: String
+      lastname: String
     ): Token
     login(identifier: String!, password: String!): Token
     updateUser(
@@ -34,6 +40,8 @@ const userDefs = gql`
       username: String!
       email: String!
       password: String!
+      firstname: String
+      lastname: String
     ): User
     deleteUser(id: ID!): Message
   }
