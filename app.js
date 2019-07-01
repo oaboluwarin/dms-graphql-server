@@ -20,7 +20,8 @@ const server = new ApolloServer({
       user,
       models
     };
-  }
+  },
+  introspection: process.env.NODE_ENV === 'production' ? true : false
 });
 
 const app = express();
