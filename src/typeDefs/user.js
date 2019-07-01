@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server-express');
 
-const typeDefs = gql`
+const userDefs = gql`
   type User {
     id: ID
     username: String
@@ -8,14 +8,6 @@ const typeDefs = gql`
     password: String
     role: String
     documents: [Document]
-  }
-
-  type Document {
-    id: ID
-    title: String
-    content: String
-    access: String
-    owner: User
   }
 
   type Token {
@@ -26,14 +18,12 @@ const typeDefs = gql`
     message: String
   }
 
-  type Query {
+  extend type Query {
     getUser(id: ID!): User
-    getDocument(id: ID!): Document
     getUsers: [User!]
-    getDocuments: [Document!]
   }
 
-  type Mutation {
+  extend type Mutation {
     registerUser(
       username: String!
       email: String!
@@ -48,10 +38,7 @@ const typeDefs = gql`
       password: String!
     ): User
     deleteUser(id: ID!): Message
-    createDocument(title: String!, content: String!, access: String): Document
-    updateDocument(id: ID!, title: String, content: String): Document
-    deleteDocument(id: ID!): Message
   }
 `;
 
-export default typeDefs;
+export default userDefs;
