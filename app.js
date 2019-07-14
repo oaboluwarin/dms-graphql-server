@@ -11,7 +11,6 @@ import './src/config';
 dotenv.config();
 
 const configurations = {
-  // Sudo on port 443
   production: { port: process.env.PORT, hostname: 'heroku.com' },
   development: {
     port: process.env.PORT || 4000,
