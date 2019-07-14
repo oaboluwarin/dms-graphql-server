@@ -13,10 +13,6 @@ const linkSchema = gql`
     _: Boolean
   }
 
-  type Subscription {
-    _: Boolean
-  }
-
   type Message {
     message: String
   }

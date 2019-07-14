@@ -1,5 +1,5 @@
 import { combineResolvers } from 'graphql-resolvers';
-import { isAuthenticated, isAdmin, isDocumentOwner } from './authorization';
+import { isAuthenticated, isDocumentOwner } from './authorization';
 
 export default {
   Query: {
@@ -17,26 +17,7 @@ export default {
 
     getAllDocuments: combineResolvers(
       isAuthenticated,
-      isAdmin,
       async (_, args, { models }) => await models.Documents.find({}).exec()
-    ),
-
-    getPrivateDocuments: combineResolvers(
-      isAuthenticated,
-      async (_, args, { models }) =>
-        await models.Documents.find({ access: 'PRIVATE' }).exec()
-    ),
-
-    getPublicDocuments: combineResolvers(
-      isAuthenticated,
-      async (_, args, { models }) =>
-        await models.Documents.find({ access: 'PUBLIC' }).exec()
-    ),
-
-    getRoleDocuments: combineResolvers(
-      isAuthenticated,
-      async (_, args, { models }) =>
-        await models.Documents.find({ access: 'ROLE' }).exec()
     )
   },
 
