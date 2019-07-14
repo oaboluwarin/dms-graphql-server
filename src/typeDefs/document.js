@@ -14,14 +14,16 @@ const documentDefs = gql`
   extend type Query {
     getDocument(id: ID!): Document
     getAllDocuments: [Document!]
-    getPublicDocuments: [Document!]
-    getPrivateDocuments: [Document!]
-    getRoleDocuments: [Document!]
   }
 
   extend type Mutation {
     createDocument(title: String!, content: String!, access: String): Document
-    updateDocument(id: ID!, title: String, content: String): Document
+    updateDocument(
+      id: ID!
+      title: String
+      content: String
+      access: String
+    ): Document
     deleteDocument(id: ID!): Message
   }
 `;

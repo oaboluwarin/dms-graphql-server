@@ -30,7 +30,7 @@ const userDefs = gql`
       username: String!
       email: String!
       password: String!
-      role: String!
+      role: String
       firstname: String
       lastname: String
     ): Token

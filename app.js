@@ -10,26 +10,38 @@ import './src/config';
 
 dotenv.config();
 
-const server = new ApolloServer({
+const configurations = {
+  // Sudo on port 443
+  production: { ssl: true, port: 443, hostname: 'heroku.com' },
+  development: { ssl: false, port: 4000, hostname: 'localhost' }
+};
+
+const environment = process.env.NODE_ENV || 'production';
+const config = configurations[environment];
+
+const apollo = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
-    const token = req.headers.authorization || '';
-    const user = await getUserWithToken(token);
+    const user = await getUserWithToken(req);
+
     return {
       user,
       models
     };
-  },
-  introspection: true,
-  playground: true
+  }
 });
 
 const app = express();
 app.use(cors());
 
-server.applyMiddleware({ app, path: '/graphql' });
+apollo.applyMiddleware({ app });
 
-app.listen({ port: process.env.PORT || 4000 }, () => {
-  console.log(`🚀  Server ready at ${server.graphqlPath}`);
+app.listen({ port: config.port }, () => {
+  console.log(
+    '🚀 Server ready at',
+    `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${
+      apollo.graphqlPath
+    }`
+  );
 });
