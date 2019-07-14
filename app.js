@@ -12,8 +12,11 @@ dotenv.config();
 
 const configurations = {
   // Sudo on port 443
-  production: { ssl: true, port: 443, hostname: 'heroku.com' },
-  development: { ssl: false, port: 4000, hostname: 'localhost' }
+  production: { port: process.env.PORT, hostname: 'heroku.com' },
+  development: {
+    port: process.env.PORT || 4000,
+    hostname: 'localhost'
+  }
 };
 
 const environment = process.env.NODE_ENV || 'production';
@@ -37,11 +40,16 @@ app.use(cors());
 
 apollo.applyMiddleware({ app });
 
-app.listen({ port: config.port }, () => {
-  console.log(
-    '🚀 Server ready at',
-    `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${
-      apollo.graphqlPath
-    }`
-  );
-});
+app.listen(
+  {
+    port: config.port
+  },
+  () => {
+    console.log(
+      '🚀 Server ready at',
+      `http${config.hostname !== 'localhost' ? 's' : ''}://${config.hostname}:${
+        config.port
+      }${apollo.graphqlPath}`
+    );
+  }
+);
