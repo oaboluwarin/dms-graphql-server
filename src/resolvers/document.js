@@ -79,7 +79,7 @@ export default {
     )
   },
 
-  Document: {
+  DocumentType: {
     owner: async (document, args, { models }) => {
       return await models.Users.findOne({ _id: document.owner });
     }

@@ -13,7 +13,7 @@ const linkSchema = gql`
     _: Boolean
   }
 
-  type Message {
+  type MessageType {
     message: String
   }
 `;

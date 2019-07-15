@@ -33,7 +33,10 @@ const userSchema = new Schema(
         ref: 'document',
         default: null
       }
-    ]
+    ],
+    avatar: {
+      type: String
+    }
   },
   {
     timestamps: true

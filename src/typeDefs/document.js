@@ -1,30 +1,34 @@
 const { gql } = require('apollo-server-express');
 
 const documentDefs = gql`
-  type Document {
+  type DocumentType {
     id: ID!
     title: String!
     content: String!
     access: String!
     createdAt: Date!
     updatedAt: Date!
-    owner: User
+    owner: UserType
   }
 
   extend type Query {
-    getDocument(id: ID!): Document
-    getAllDocuments: [Document!]
+    getDocument(id: ID!): DocumentType
+    getAllDocuments: [DocumentType!]
   }
 
   extend type Mutation {
-    createDocument(title: String!, content: String!, access: String): Document
+    createDocument(
+      title: String!
+      content: String!
+      access: String
+    ): DocumentType
     updateDocument(
       id: ID!
       title: String
       content: String
       access: String
-    ): Document
-    deleteDocument(id: ID!): Message
+    ): DocumentType
+    deleteDocument(id: ID!): MessageType
   }
 `;
 

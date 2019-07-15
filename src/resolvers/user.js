@@ -117,7 +117,7 @@ export default {
     )
   },
 
-  User: {
+  UserType: {
     documents: async (user, args, { models }) => {
       return await models.Documents.find({ owner: user.id }).exec();
     }
